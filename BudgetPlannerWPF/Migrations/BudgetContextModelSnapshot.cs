@@ -25,7 +25,10 @@ namespace BudgetPlannerWPF.Migrations
             modelBuilder.Entity("BudgetPlannerWPF.Models.Expense", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -101,7 +104,10 @@ namespace BudgetPlannerWPF.Migrations
             modelBuilder.Entity("BudgetPlannerWPF.Models.Income", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");

@@ -1,9 +1,7 @@
 ﻿using BudgetPlannerWPF.Commands;
 using BudgetPlannerWPF.Models;
 using BudgetPlannerWPF.Services;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BudgetPlannerWPF.ViewModels
@@ -17,37 +15,58 @@ namespace BudgetPlannerWPF.ViewModels
         public Array IncomeCategories => Enum.GetValues(typeof(IncomeCategory));
         public Array ExpenseCategories => Enum.GetValues(typeof(ExpenseCategory));
 
-
         public ObservableCollection<Income> Incomes { get; } = new();
         public ObservableCollection<Expense> Expenses { get; } = new();
 
         // ------------------------------------------------------------
-        // Selected items in lists
+        // Selected items
         // ------------------------------------------------------------
         private Income _selectedIncome;
         public Income SelectedIncome
         {
             get => _selectedIncome;
-            set { _selectedIncome = value; RaisePropertyChanged(); }
+            set
+            {
+                _selectedIncome = value;
+                RaisePropertyChanged();
+                EditIncomeCommand?.RaiseCanExecuteChanged();
+                DeleteIncomeCommand?.RaiseCanExecuteChanged();
+            }
         }
 
         private Expense _selectedExpense;
         public Expense SelectedExpense
         {
             get => _selectedExpense;
-            set { _selectedExpense = value; RaisePropertyChanged(); }
+            set
+            {
+                _selectedExpense = value;
+                RaisePropertyChanged();
+                EditExpenseCommand?.RaiseCanExecuteChanged();
+                DeleteExpenseCommand?.RaiseCanExecuteChanged();
+            }
         }
 
         // ------------------------------------------------------------
-        // FORM VISIBILITY + EDITING MODELS
+        // Visibility-based UI control
         // ------------------------------------------------------------
-        private bool _isFormVisible;
-        public bool IsFormVisible
+        private Visibility _formVisibility = Visibility.Collapsed;
+        public Visibility FormVisibility
         {
-            get => _isFormVisible;
-            set { _isFormVisible = value; RaisePropertyChanged(); }
+            get => _formVisibility;
+            set { _formVisibility = value; RaisePropertyChanged(); }
         }
 
+        private Visibility _mainContentVisibility = Visibility.Visible;
+        public Visibility MainContentVisibility
+        {
+            get => _mainContentVisibility;
+            set { _mainContentVisibility = value; RaisePropertyChanged(); }
+        }
+
+        // ------------------------------------------------------------
+        // Editing objects
+        // ------------------------------------------------------------
         private Income _editingIncome;
         public Income EditingIncome
         {
@@ -63,7 +82,7 @@ namespace BudgetPlannerWPF.ViewModels
         }
 
         // ------------------------------------------------------------
-        // Summary
+        // Summary fields
         // ------------------------------------------------------------
         public int SelectedMonth { get; set; } = DateTime.Now.Month;
         public int SelectedYear { get; set; } = DateTime.Now.Year;
@@ -126,14 +145,14 @@ namespace BudgetPlannerWPF.ViewModels
         }
 
         // ------------------------------------------------------------
-        // Load from DB
+        // Load
         // ------------------------------------------------------------
         private async Task LoadDataAsync()
         {
             var incomes = await _repository.GetAllIncomesAsync();
             var expenses = await _repository.GetAllExpensesAsync();
 
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 Incomes.Clear();
                 Expenses.Clear();
@@ -146,50 +165,71 @@ namespace BudgetPlannerWPF.ViewModels
         }
 
         // ------------------------------------------------------------
-        // ADD / EDIT — open form
+        // SHOW/HIDE FORM
+        // ------------------------------------------------------------
+        private void ShowForm()
+        {
+            MainContentVisibility = Visibility.Collapsed;
+            FormVisibility = Visibility.Visible;
+        }
+
+        private void HideForm()
+        {
+            EditingIncome = null;
+            EditingExpense = null;
+            MainContentVisibility = Visibility.Visible;
+            FormVisibility = Visibility.Collapsed;
+        }
+
+        // ------------------------------------------------------------
+        // Add/Edit
         // ------------------------------------------------------------
         private void StartAddIncome()
         {
-            EditingExpense = null;
             EditingIncome = new Income
             {
                 Date = DateTime.Now,
-                TransactionType = TransactionType.Monthly,
-                Category = IncomeCategory.Salary
+                Category = IncomeCategory.Salary,
+                TransactionType = TransactionType.Monthly
             };
 
-            IsFormVisible = true;
+            EditingExpense = null;
+            ShowForm();
         }
 
         private void StartEditIncome()
         {
-            EditingExpense = null;
+            if (SelectedIncome == null) return;
+
             EditingIncome = SelectedIncome;
-            IsFormVisible = true;
+            EditingExpense = null;
+            ShowForm();
         }
 
         private void StartAddExpense()
         {
-            EditingIncome = null;
             EditingExpense = new Expense
             {
                 Date = DateTime.Now,
-                TransactionType = TransactionType.Monthly,
-                Category = ExpenseCategory.Food
+                Category = ExpenseCategory.Food,
+                TransactionType = TransactionType.Monthly
             };
 
-            IsFormVisible = true;
+            EditingIncome = null;
+            ShowForm();
         }
 
         private void StartEditExpense()
         {
-            EditingIncome = null;
+            if (SelectedExpense == null) return;
+
             EditingExpense = SelectedExpense;
-            IsFormVisible = true;
+            EditingIncome = null;
+            ShowForm();
         }
 
         // ------------------------------------------------------------
-        // DELETE
+        // Delete
         // ------------------------------------------------------------
         private async void DeleteIncome()
         {
@@ -218,17 +258,19 @@ namespace BudgetPlannerWPF.ViewModels
         }
 
         // ------------------------------------------------------------
-        // SAVE / CANCEL FORM
+        // Save / Cancel
         // ------------------------------------------------------------
         private async void SaveForm()
         {
             if (EditingIncome != null)
             {
-                if (EditingIncome.Id == 0) await _repository.AddIncomeAsync(EditingIncome);
+                if (EditingIncome.Id == 0)
+                    await _repository.AddIncomeAsync(EditingIncome);
             }
             else if (EditingExpense != null)
             {
-                if (EditingExpense.Id == 0) await _repository.AddExpenseAsync(EditingExpense);
+                if (EditingExpense.Id == 0)
+                    await _repository.AddExpenseAsync(EditingExpense);
             }
 
             await _repository.SaveChangesAsync();
@@ -239,19 +281,17 @@ namespace BudgetPlannerWPF.ViewModels
             if (EditingExpense != null && !Expenses.Contains(EditingExpense))
                 Expenses.Add(EditingExpense);
 
-            CancelForm();
+            HideForm();
             RefreshTotals();
         }
 
         private void CancelForm()
         {
-            EditingIncome = null;
-            EditingExpense = null;
-            IsFormVisible = false;
+            HideForm();
         }
 
         // ------------------------------------------------------------
-        // REFRESH TOTALS (with service)
+        // Totals
         // ------------------------------------------------------------
         private void RefreshTotals()
         {
@@ -265,3 +305,4 @@ namespace BudgetPlannerWPF.ViewModels
         }
     }
 }
+

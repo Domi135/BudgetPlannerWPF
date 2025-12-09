@@ -11,8 +11,9 @@
 
     <Grid>
 
+        <!--  HUVUDINNEHÅLL (döljs när formuläret visas)  -->
+        <Grid Margin="20" Visibility="{Binding MainContentVisibility}">
 
-        <Grid Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -25,76 +26,175 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-
             <TextBlock Text="Budget Planner"
                        FontSize="26" FontWeight="Bold"
                        Margin="0 0 0 20"
                        Grid.ColumnSpan="2"/>
 
+            <!-- Inkomster -->
             <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 0 20 0">
                 <TextBlock Text="Inkomster" FontSize="18" FontWeight="Bold" />
-                <DataGrid ItemsSource="{Binding Incomes}"
+
+                <!-- Header -->
+                <Grid Margin="0 5 0 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Titel" Grid.Column="0" FontWeight="Bold"/>
+                    <TextBlock Text="Belopp" Grid.Column="1" FontWeight="Bold"/>
+                    <TextBlock Text="Typ" Grid.Column="2" FontWeight="Bold"/>
+                    <TextBlock Text="Kategori" Grid.Column="3" FontWeight="Bold"/>
+                    <TextBlock Text="Datum" Grid.Column="4" FontWeight="Bold"/>
+                </Grid>
+
+                <!-- Lista -->
+                <ListView ItemsSource="{Binding Incomes}"
                           SelectedItem="{Binding SelectedIncome}"
-                          AutoGenerateColumns="False"
                           Height="250">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Titel" Binding="{Binding Title}" />
-                        <DataGridTextColumn Header="Belopp" Binding="{Binding Amount}" />
-                        <DataGridTextColumn Header="Typ" Binding="{Binding TransactionType}" />
-                        <DataGridTextColumn Header="Kategori" Binding="{Binding Category}" />
-                        <DataGridTextColumn Header="Datum" Binding="{Binding Date}" />
-                    </DataGrid.Columns>
+                                <TextBlock Text="{Binding Title}" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Amount}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding TransactionType}" Grid.Column="2"/>
+                                <TextBlock Text="{Binding Category}" Grid.Column="3"/>
+                                <TextBlock Text="{Binding Date}" Grid.Column="4"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                </DataGrid>
-
+                <!-- Knapp-rad -->
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-                    <Button Content="Lägg till inkomst" Command="{Binding AddIncomeCommand}" Style="{StaticResource PrimaryButton}" />
-                    <Button Content="Ta bort inkomst" Command="{Binding DeleteIncomeCommand}" Style="{StaticResource DangerButton}" Margin="10 0 0 0"/>
-                    <views:IncomeExpenseFormView/>
+                    <Button Content="Lägg till inkomst"
+                            Command="{Binding AddIncomeCommand}"
+                            Style="{StaticResource PrimaryButton}" />
+
+                    <Button Content="Redigera"
+                            Command="{Binding EditIncomeCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="10 0 0 0"/>
+
+                    <Button Content="Ta bort inkomst"
+                            Command="{Binding DeleteIncomeCommand}"
+                            Style="{StaticResource DangerButton}"
+                            Margin="10 0 0 0"/>
                 </StackPanel>
             </StackPanel>
 
-
+            <!-- Utgifter -->
             <StackPanel Grid.Row="1" Grid.Column="1">
                 <TextBlock Text="Utgifter" FontSize="18" FontWeight="Bold" />
-                <DataGrid ItemsSource="{Binding Expenses}"
+
+                <!-- Header -->
+                <Grid Margin="0 5 0 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Titel" Grid.Column="0" FontWeight="Bold"/>
+                    <TextBlock Text="Belopp" Grid.Column="1" FontWeight="Bold"/>
+                    <TextBlock Text="Typ" Grid.Column="2" FontWeight="Bold"/>
+                    <TextBlock Text="Kategori" Grid.Column="3" FontWeight="Bold"/>
+                    <TextBlock Text="Datum" Grid.Column="4" FontWeight="Bold"/>
+                </Grid>
+
+                <!-- Lista -->
+                <ListView ItemsSource="{Binding Expenses}"
                           SelectedItem="{Binding SelectedExpense}"
-                          AutoGenerateColumns="False"
                           Height="250">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Titel" Binding="{Binding Title}" />
-                        <DataGridTextColumn Header="Belopp" Binding="{Binding Amount}" />
-                        <DataGridTextColumn Header="Typ" Binding="{Binding TransactionType}" />
-                        <DataGridTextColumn Header="Kategori" Binding="{Binding Category}" />
-                        <DataGridTextColumn Header="Datum" Binding="{Binding Date}" />
-                    </DataGrid.Columns>
+                                <TextBlock Text="{Binding Title}" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Amount}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding TransactionType}" Grid.Column="2"/>
+                                <TextBlock Text="{Binding Category}" Grid.Column="3"/>
+                                <TextBlock Text="{Binding Date}" Grid.Column="4"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                </DataGrid>
-
+                <!-- Knapp-rad -->
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-                    <Button Content="Lägg till utgift" Command="{Binding AddExpenseCommand}" Style="{StaticResource PrimaryButton}" />
-                    <Button Content="Ta bort utgift" Command="{Binding DeleteExpenseCommand}" Style="{StaticResource DangerButton}" Margin="10 0 0 0"/>
-                    <views:IncomeExpenseFormView/>
+
+                    <Button Content="Lägg till utgift"
+                            Command="{Binding AddExpenseCommand}"
+                            Style="{StaticResource PrimaryButton}" />
+
+                    <Button Content="Redigera"
+                            Command="{Binding EditExpenseCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="10 0 0 0"/>
+
+                    <Button Content="Ta bort utgift"
+                            Command="{Binding DeleteExpenseCommand}"
+                            Style="{StaticResource DangerButton}"
+                            Margin="10 0 0 0"/>
                 </StackPanel>
             </StackPanel>
 
-
-            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0 30 0 0">
+            <!-- Summering -->
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0 30 0 0" MaxWidth="300" HorizontalAlignment="Left">
                 <TextBlock Text="Prognos (baseline)" FontSize="20" FontWeight="Bold" />
                 <TextBlock Text="{Binding MonthlyIncome, StringFormat='Inkomster: {0:C}'}" FontSize="16" />
                 <TextBlock Text="{Binding MonthlyExpenses, StringFormat='Utgifter: {0:C}'}" FontSize="16" />
                 <TextBlock Text="{Binding MonthlyNet, StringFormat='Netto: {0:C}'}" FontSize="16" FontWeight="Bold" />
             </StackPanel>
 
+            <!-- Årsinkomst och relaterat -->
+            <StackPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="0 30 0 0">
+
+                    <TextBlock Text="Årsinkomst" FontSize="20" FontWeight="Bold" />
+                    <TextBlock Text="Här ska åtsinkomsten vara"/>
+                    <TextBox></TextBox>
+                    <TextBlock Text="Och här kommer antal jobbade timmar"/>
+                    <TextBox></TextBox>
+                    <Button Content="Beräkna månadsinkomst" Style="{StaticResource PrimaryButton}"/>
+                    <Button Content="Rensa" Style="{StaticResource DangerButton}"/> 
+                    <TextBlock Text="Här får man då månadsinkomsten (allting måste beräknas)"/>
+
+            </StackPanel>
+            
             <Button Content="Uppdatera" Grid.Row="3" Grid.ColumnSpan="2"
                     Command="{Binding RefreshCommand}"
                     Margin="0 20 0 0"
                     Style="{StaticResource PrimaryButton}" />
-
         </Grid>
 
+        <!-- FORM OVERLAY (visas ovanpå) -->
+        <Grid Background="#80000000"
+              Visibility="{Binding FormVisibility}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <views:IncomeExpenseFormView />
+        </Grid>
 
     </Grid>
 </Window>

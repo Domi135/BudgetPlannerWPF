@@ -1,6 +1,5 @@
 ﻿using BudgetPlannerWPF.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace BudgetPlannerWPF.Data
 {
@@ -31,11 +30,11 @@ namespace BudgetPlannerWPF.Data
             base.OnModelCreating(modelBuilder);
 
             // ===============================================
-            // FIX: ValueGeneratedNever för att slippa IDENTITY-problem
+            // FIX: let the DB generate keys on add
             // ===============================================
-            modelBuilder.Entity<Income>().Property(x => x.Id).ValueGeneratedNever();
-            modelBuilder.Entity<Expense>().Property(x => x.Id).ValueGeneratedNever();
-            modelBuilder.Entity<RecurringExpense>().Property(x => x.Id).ValueGeneratedNever();
+            modelBuilder.Entity<Income>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Expense>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<RecurringExpense>().Property(x => x.Id).ValueGeneratedOnAdd();
 
             // ============================
             //          INCOME (4)
