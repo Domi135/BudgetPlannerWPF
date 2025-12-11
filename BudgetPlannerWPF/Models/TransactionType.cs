@@ -4,6 +4,7 @@
     {
         OneTime = 0,
         Monthly = 1,
-        Yearly = 2
+        Yearly = 2,
+        YearlyHoursBased = 3
     }
 }

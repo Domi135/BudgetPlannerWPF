@@ -19,5 +19,6 @@ namespace BudgetPlannerWPF.Services
 
         decimal CalculateYearlyTotalIncome(IEnumerable<Income> incomes, int year);
         decimal CalculateYearlyTotalExpenses(IEnumerable<Expense> expenses, int year);
+        decimal CalculateMonthlyIncomeFromYearly(decimal yearlyIncome, int yearlyHoursWorked);
     }
 }

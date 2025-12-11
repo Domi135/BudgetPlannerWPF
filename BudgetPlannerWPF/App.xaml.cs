@@ -8,46 +8,6 @@ using System.Windows;
 
 namespace BudgetPlannerWPF
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    //public partial class App : Application
-    //{
-    //    public static ServiceProvider ServiceProvider { get; private set; }
-
-    //    private App()
-    //    {
-    //        // 1. Configure Services
-    //        var services = new ServiceCollection();
-
-    //        // Add DbContext — connection string ligger i BudgetContext
-    //        services.AddDbContext<BudgetContext>();
-
-    //        // Add Repository & Service
-    //        services.AddScoped<IBudgetRepository, BudgetRepository>();
-    //        services.AddScoped<IBudgetService, BudgetService>();
-
-    //        // Add ViewModels
-    //        services.AddSingleton<MainViewModel>();
-
-    //        // Add MainWindow and inject MainViewModel
-    //        services.AddSingleton<MainWindow>();
-
-    //        ServiceProvider = services.BuildServiceProvider();
-
-    //        // 2. Start app
-    //        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-    //        mainWindow.Show();
-    //    }
-
-    //    private void Application_Startup(object sender, StartupEventArgs e)
-    //    {
-    //        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-    //        mainWindow.Show();
-    //    }
-    //}
-
-    // App.xaml.cs (C#)
     public partial class App : Application
     {
         public static ServiceProvider ServiceProvider { get; private set; }

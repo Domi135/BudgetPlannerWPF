@@ -52,6 +52,10 @@ namespace BudgetPlannerWPF.Services
                         if (exp.YearlyMonth == month)
                             total += exp.Amount;
                         break;
+
+                    case TransactionType.YearlyHoursBased:
+                        total += CalculateMonthlyIncomeFromHours(inc.HourlyRate, inc.YearlyHoursWorked);
+                        break;
                 }
             }
 
@@ -136,6 +140,15 @@ namespace BudgetPlannerWPF.Services
             }
 
             return total;
+        } 
+
+        public decimal CalculateMonthlyIncomeFromYearly(decimal yearlyIncome, int yearlyHoursWorked) 
+        {
+             if (yearlyHoursWorked > 0)
+                return (yearlyIncome / yearlyHoursWorked) * (yearlyHoursWorked / 12m);
+
+                // Fallback: om yearlyIncome är fast årslön
+                return yearlyIncome / 12m;
         }
     }
 

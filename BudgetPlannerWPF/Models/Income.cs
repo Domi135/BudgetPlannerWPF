@@ -11,5 +11,8 @@ namespace BudgetPlannerWPF.Models
     {
         public IncomeCategory Category { get; set; }
         public bool IsYearlyIncome { get; set; }
+        public decimal HourlyRate { get; set;}
+        public int YearlyHoursWorked { get; set;}
+        public decimal YearlyIncome {get; set;}
     }
 }

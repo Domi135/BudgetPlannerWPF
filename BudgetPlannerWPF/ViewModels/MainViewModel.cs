@@ -303,6 +303,15 @@ namespace BudgetPlannerWPF.ViewModels
 
             MonthlyNet = MonthlyIncome - MonthlyExpenses;
         }
+
+        //------------------------------------------------------------
+        // Smmary for upcoming month
+        // ------------------------------------------------------------
+
+        // ------------------------------------------------------------
+        // Monthly income based on yearly income and hours worked
+        // ------------------------------------------------------------
+
     }
 }
 
